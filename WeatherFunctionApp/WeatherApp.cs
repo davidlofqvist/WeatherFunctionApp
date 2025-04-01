@@ -47,6 +47,28 @@ namespace WeatherFunctionApp
         }
 
         /// <summary>
+        /// HTTP trigger function to start the weather app.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <param name="executionContext">The function execution context.</param>
+        /// <returns>The HTTP response.</returns>
+        [Function("WeatherApp")]
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req, FunctionContext executionContext)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            await response.WriteStringAsync("Starting weatherapp");
+
+            // Get the weather data, and store it in the table and blob storage
+            await FetchWeatherDataAndStoreData(new MyInfo());
+
+            return response;
+        }
+
+        /// <summary>
         /// Timer trigger function to fetch weather data and store it in table and blob storage.
         /// </summary>
         /// <param name="timer">The timer info.</param>
