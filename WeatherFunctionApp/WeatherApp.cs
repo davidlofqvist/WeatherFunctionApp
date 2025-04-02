@@ -103,7 +103,7 @@ namespace WeatherFunctionApp
                 {
                     await blobClient.UploadAsync(stream, true);
                 }
-                return data;
+                return infoTable.RowKey;
             }
             else
             {
